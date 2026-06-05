@@ -19,20 +19,23 @@ class BalanceCard extends StatelessWidget {
     IconData icon;
 
     if (isSettled) {
-      cardColor = AppColors.success.withOpacity(0.1);
+      cardColor = AppColors.success.withValues(alpha: 0.1);
       message = AppStrings.settled;
       icon = Icons.check_circle_outline;
     } else if (balance > 0) {
-      cardColor = AppColors.success.withOpacity(0.1);
-      message = '${AppStrings.friendOwes} ${AppFormatters.formatCurrency(balance.abs())}';
+      cardColor = AppColors.success.withValues(alpha: 0.1);
+      message =
+          '${AppStrings.friendOwes} ${AppFormatters.formatCurrency(balance.abs())}';
       icon = Icons.arrow_upward;
     } else {
-      cardColor = AppColors.danger.withOpacity(0.1);
-      message = '${AppStrings.youOwe} ${AppFormatters.formatCurrency(balance.abs())}';
+      cardColor = AppColors.danger.withValues(alpha: 0.1);
+      message =
+          '${AppStrings.youOwe} ${AppFormatters.formatCurrency(balance.abs())}';
       icon = Icons.arrow_downward;
     }
 
-    final textColor = balance > 0 || isSettled ? AppColors.success : AppColors.danger;
+    final textColor =
+        balance > 0 || isSettled ? AppColors.success : AppColors.danger;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),

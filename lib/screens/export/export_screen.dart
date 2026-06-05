@@ -26,23 +26,28 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
     final user = ref.read(currentUserProvider);
     final tripAsync = ref.read(tripProvider);
 
-    if (user == null || tripAsync.value == null || entriesAsync.value == null) return;
+    if (user == null || tripAsync.value == null || entriesAsync.value == null) {
+      return;
+    }
 
     final entries = entriesAsync.value!;
     final trip = tripAsync.value!;
-    
+
     final myUid = user.uid;
     final myName = trip.members[myUid] ?? 'User';
-    final friendUid = trip.members.keys.firstWhere((id) => id != myUid, orElse: () => '');
+    final friendUid =
+        trip.members.keys.firstWhere((id) => id != myUid, orElse: () => '');
     final friendName = trip.members[friendUid] ?? 'Friend';
 
     try {
       switch (type) {
         case 'excel':
-          await _exportService.exportToExcel(entries, myName, friendName, _dateRange);
+          await _exportService.exportToExcel(
+              entries, myName, friendName, _dateRange);
           break;
         case 'pdf':
-          await _exportService.exportToPdf(entries, myName, friendName, _dateRange);
+          await _exportService.exportToPdf(
+              entries, myName, friendName, _dateRange);
           break;
         case 'csv':
           await _exportService.exportToCsv(entries, _dateRange);
@@ -73,7 +78,8 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
           children: [
             const Text(
               'Select Date Range',
-              style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: AppColors.textSecondary, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             InkWell(
@@ -108,14 +114,16 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.calendar_today, color: AppColors.primary, size: 20),
+                    const Icon(Icons.calendar_today,
+                        color: AppColors.primary, size: 20),
                     const SizedBox(width: 16),
                     Text(
                       '${AppFormatters.formatDate(_dateRange.start)} - ${AppFormatters.formatDate(_dateRange.end)}',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const Spacer(),
-                    const Icon(Icons.edit, color: AppColors.textMuted, size: 20),
+                    const Icon(Icons.edit,
+                        color: AppColors.textMuted, size: 20),
                   ],
                 ),
               ),
@@ -123,7 +131,8 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
             const SizedBox(height: 48),
             const Text(
               'Choose Format',
-              style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: AppColors.textSecondary, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             _ExportOptionCard(
@@ -187,7 +196,7 @@ class _ExportOptionCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: iconColor, size: 28),
@@ -199,12 +208,16 @@ class _ExportOptionCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                    style: const TextStyle(
+                        color: AppColors.textMuted, fontSize: 12),
                   ),
                 ],
               ),

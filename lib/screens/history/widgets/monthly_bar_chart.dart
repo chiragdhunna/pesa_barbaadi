@@ -32,17 +32,23 @@ class MonthlyBarChart extends StatelessWidget {
       final monthKey = DateFormat('MMM').format(entry.date);
       if (chartData.containsKey(monthKey)) {
         if (entry.paidByUid == myUid) {
-          chartData[monthKey]!['me'] = (chartData[monthKey]!['me'] ?? 0.0) + entry.amount;
+          chartData[monthKey]!['me'] =
+              (chartData[monthKey]!['me'] ?? 0.0) + entry.amount;
         } else {
-          chartData[monthKey]!['friend'] = (chartData[monthKey]!['friend'] ?? 0.0) + entry.amount;
+          chartData[monthKey]!['friend'] =
+              (chartData[monthKey]!['friend'] ?? 0.0) + entry.amount;
         }
       }
     }
 
     double maxVal = 0;
     chartData.forEach((_, data) {
-      if (data['me']! > maxVal) maxVal = data['me']!;
-      if (data['friend']! > maxVal) maxVal = data['friend']!;
+      if (data['me']! > maxVal) {
+        maxVal = data['me']!;
+      }
+      if (data['friend']! > maxVal) {
+        maxVal = data['friend']!;
+      }
     });
     // Add 20% buffer to the top
     maxVal = maxVal == 0 ? 1000 : maxVal * 1.2;
@@ -78,21 +84,27 @@ class MonthlyBarChart extends StatelessWidget {
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       final index = value.toInt();
-                      if (index < 0 || index >= lastSixMonths.length) return const SizedBox();
+                      if (index < 0 || index >= lastSixMonths.length) {
+                        return const SizedBox();
+                      }
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
                           DateFormat('MMM').format(lastSixMonths[index]),
-                          style: const TextStyle(color: AppColors.textMuted, fontSize: 10),
+                          style: const TextStyle(
+                              color: AppColors.textMuted, fontSize: 10),
                         ),
                       );
                     },
                     reservedSize: 30,
                   ),
                 ),
-                leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                leftTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
               gridData: const FlGridData(show: false),
               borderData: FlBorderData(show: false),
@@ -106,13 +118,15 @@ class MonthlyBarChart extends StatelessWidget {
                       toY: data['me']!,
                       color: AppColors.primary,
                       width: 12,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(4)),
                     ),
                     BarChartRodData(
                       toY: data['friend']!,
                       color: AppColors.success,
                       width: 12,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(4)),
                     ),
                   ],
                 );
@@ -121,11 +135,11 @@ class MonthlyBarChart extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _LegendItem(color: AppColors.primary, label: 'You'),
-            const SizedBox(width: 24),
+            SizedBox(width: 24),
             _LegendItem(color: AppColors.success, label: 'Friend'),
           ],
         ),
