@@ -20,7 +20,8 @@ class AppColors {
 class AppStrings {
   static const String appName = 'Pesa Barbaadi';
   static const String welcomeMessage = 'Split petrol costs with a friend';
-
+  static const String tripIdKey = 'tripId';
+  
   // Firestore Collection Names
   static const String tripsCollection = 'trips';
   static const String entriesCollection = 'entries';

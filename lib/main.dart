@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pesa_barbaadi/firebase_options.dart';
+import 'package:pesa_barbaadi/router.dart';
 import 'package:pesa_barbaadi/utils/constants.dart';
 
 void main() async {
@@ -19,24 +19,6 @@ void main() async {
   );
 }
 
-// Placeholder router
-final _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const Scaffold(
-        body: Center(
-          child: Text(
-            'Pesa Barbaadi',
-            style: TextStyle(color: AppColors.textPrimary, fontSize: 24),
-          ),
-        ),
-      ),
-    ),
-  ],
-);
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -44,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Pesa Barbaadi',
-      routerConfig: _router,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
