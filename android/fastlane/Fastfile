@@ -1,28 +1,17 @@
-default_platform(:android)
+lane :distribute do
+  apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
+  build_number = ENV["BUILD_NUMBER"] || "1"
 
-platform :android do
+  sh("flutter build apk --release", env: { "BUILD_NUMBER" => build_number })
 
-  desc "Run Flutter tests"
-  lane :test do
-    sh("flutter test")
-  end
+  UI.message("APK exists? #{File.exist?(apk_path)} size=#{File.size(apk_path) rescue 'n/a'}")
 
-  desc "Build release APK"
-  lane :build do
-    sh("flutter build apk --release")
-  end
-
-  desc "Build and distribute to Firebase App Distribution"
-  lane :distribute do
-    sh("flutter build apk --release")
-
-    firebase_app_distribution(
-      app: ENV["FIREBASE_APP_ID"],
-      apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
-      groups: "pesa-barbaadi-testers",
-      release_notes: "Build #{ENV['BUILD_NUMBER'] || 'local'} — #{Time.now.strftime('%d %b %Y')}",
-      firebase_cli_token: ENV["FIREBASE_TOKEN"]
-    )
-  end
-
+  firebase_app_distribution(
+    app: ENV["FIREBASE_APP_ID"],
+    apk_path: apk_path,
+    android_type: "APK",
+    groups: "pesa-barbaadi-testers",
+    release_notes: "Build ##{build_number} — #{Time.now.strftime('%d %b %Y')}",
+    firebase_cli_token: ENV["FIREBASE_TOKEN"]
+  )
 end
