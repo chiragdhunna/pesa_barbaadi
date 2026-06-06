@@ -14,10 +14,13 @@ class ExportService {
   List<FuelEntry> _filterEntries(
       List<FuelEntry> entries, DateTimeRange? range) {
     if (range == null) return entries;
+    final start = DateTime(range.start.year, range.start.month, range.start.day);
+    final end =
+        DateTime(range.end.year, range.end.month, range.end.day, 23, 59, 59);
     return entries
         .where((e) =>
-            e.date.isAfter(range.start) &&
-            e.date.isBefore(range.end.add(const Duration(days: 1))))
+            (e.date.isAfter(start) || e.date.isAtSameMomentAs(start)) &&
+            (e.date.isBefore(end) || e.date.isAtSameMomentAs(end)))
         .toList();
   }
 
