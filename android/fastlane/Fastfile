@@ -14,7 +14,7 @@ platform :android do
 
   desc "Build and distribute to Firebase App Distribution"
   lane :distribute do
-    apk_path = "../../build/app/outputs/flutter-apk/app-release.apk"
+    apk_path = File.expand_path("../../build/app/outputs/flutter-apk/app-release.apk", __dir__)
     build_number = ENV["BUILD_NUMBER"] || "1"
 
     sh("flutter build apk --release", env: { "BUILD_NUMBER" => build_number })
