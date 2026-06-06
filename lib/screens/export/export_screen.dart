@@ -116,78 +116,107 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Export Report'),
+        title: const Text('📊 Export Report'),
         backgroundColor: AppColors.surface,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Select Range',
-              style: TextStyle(
-                  color: AppColors.textSecondary, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+      body: entriesAsync.when(
+        data: (entries) {
+          if (entries.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.query_stats,
+                        size: 64, color: AppColors.textMuted),
+                    SizedBox(height: 16),
+                    Text(
+                      'No entries available to export.',
+                      style: TextStyle(color: AppColors.textMuted),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildChoiceChip(DateRangeOption.thisMonth, 'This Month'),
-                _buildChoiceChip(DateRangeOption.last3Months, 'Last 3 Months'),
-                _buildChoiceChip(DateRangeOption.allTime, 'All Time'),
+                const Text(
+                  'Select Range',
+                  style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _buildChoiceChip(DateRangeOption.thisMonth, 'This Month'),
+                    _buildChoiceChip(
+                        DateRangeOption.last3Months, 'Last 3 Months'),
+                    _buildChoiceChip(DateRangeOption.allTime, 'All Time'),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                if (user != null && tripAsync.value != null)
+                  _SummaryPreviewCard(
+                    entries: entries,
+                    range: _currentRange,
+                    myUid: user.uid,
+                    friendName: tripAsync.value!.members.entries
+                        .firstWhere((e) => e.key != user.uid,
+                            orElse: () => const MapEntry('', 'Friend'))
+                        .value,
+                  ),
+                const SizedBox(height: 48),
+                const Text(
+                  'Choose Format',
+                  style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                _ExportOptionCard(
+                  title: 'Microsoft Excel (.xlsx)',
+                  subtitle: 'Best for spreadsheet analysis',
+                  icon: Icons.table_chart,
+                  iconColor: Colors.green,
+                  isLoading: _isExportingExcel,
+                  onTap: () => _handleExport('excel'),
+                ),
+                const SizedBox(height: 16),
+                _ExportOptionCard(
+                  title: 'PDF Document (.pdf)',
+                  subtitle: 'Best for sharing and printing',
+                  icon: Icons.picture_as_pdf,
+                  iconColor: Colors.red,
+                  isLoading: _isExportingPdf,
+                  onTap: () => _handleExport('pdf'),
+                ),
+                const SizedBox(height: 16),
+                _ExportOptionCard(
+                  title: 'Comma Separated (.csv)',
+                  subtitle: 'Best for data import',
+                  icon: Icons.description,
+                  iconColor: Colors.blue,
+                  isLoading: _isExportingCsv,
+                  onTap: () => _handleExport('csv'),
+                ),
               ],
             ),
-            const SizedBox(height: 32),
-            if (entriesAsync.value != null &&
-                user != null &&
-                tripAsync.value != null)
-              _SummaryPreviewCard(
-                entries: entriesAsync.value!,
-                range: _currentRange,
-                myUid: user.uid,
-                friendName: tripAsync.value!.members.entries
-                    .firstWhere((e) => e.key != user.uid,
-                        orElse: () => const MapEntry('', 'Friend'))
-                    .value,
-              ),
-            const SizedBox(height: 48),
-            const Text(
-              'Choose Format',
-              style: TextStyle(
-                  color: AppColors.textSecondary, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            _ExportOptionCard(
-              title: 'Microsoft Excel (.xlsx)',
-              subtitle: 'Best for spreadsheet analysis',
-              icon: Icons.table_chart,
-              iconColor: Colors.green,
-              isLoading: _isExportingExcel,
-              onTap: () => _handleExport('excel'),
-            ),
-            const SizedBox(height: 16),
-            _ExportOptionCard(
-              title: 'PDF Document (.pdf)',
-              subtitle: 'Best for sharing and printing',
-              icon: Icons.picture_as_pdf,
-              iconColor: Colors.red,
-              isLoading: _isExportingPdf,
-              onTap: () => _handleExport('pdf'),
-            ),
-            const SizedBox(height: 16),
-            _ExportOptionCard(
-              title: 'Comma Separated (.csv)',
-              subtitle: 'Best for data import',
-              icon: Icons.description,
-              iconColor: Colors.blue,
-              isLoading: _isExportingCsv,
-              onTap: () => _handleExport('csv'),
-            ),
-          ],
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
         ),
+        error: (error, stack) => Center(child: Text('Error: $error')),
       ),
     );
   }

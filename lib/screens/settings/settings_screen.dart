@@ -18,7 +18,7 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('⚙️ Settings'),
         backgroundColor: AppColors.surface,
         elevation: 0,
       ),

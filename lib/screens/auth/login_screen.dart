@@ -28,7 +28,7 @@ class LoginScreen extends ConsumerWidget {
                 AppStrings.appName,
                 style: TextStyle(
                   fontSize: 28,
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

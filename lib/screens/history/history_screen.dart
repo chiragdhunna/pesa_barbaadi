@@ -29,7 +29,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('History'),
+        title: const Text('📜 History'),
         backgroundColor: AppColors.surface,
         elevation: 0,
         actions: [
