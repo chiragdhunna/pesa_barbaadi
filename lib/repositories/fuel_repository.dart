@@ -152,6 +152,16 @@ class FuelRepository {
     });
   }
 
+  /// Removes the current user from the trip members.
+  Future<void> leaveTrip() async {
+    await _firestore.collection(AppStrings.tripsCollection).doc(tripId).update({
+      'members.$currentUserUid': FieldValue.delete(),
+    });
+    // Optional: If members become empty, you might want to delete the trip,
+    // but for now, just removing the user is enough as per requirement.
+    await _recomputeBalance();
+  }
+
   /// Watches the trip document for real-time updates.
   Stream<Trip> watchTrip() {
     return _firestore
