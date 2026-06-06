@@ -1,0 +1,28 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Run Flutter tests"
+  lane :test do
+    sh("flutter test")
+  end
+
+  desc "Build release APK"
+  lane :build do
+    sh("flutter build apk --release")
+  end
+
+  desc "Build and distribute to Firebase App Distribution"
+  lane :distribute do
+    sh("flutter build apk --release")
+
+    firebase_app_distribution(
+      app: ENV["FIREBASE_APP_ID"],
+      apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
+      groups: "pesa-barbaadi-testers",
+      release_notes: "Build #{ENV['BUILD_NUMBER'] || 'local'} — #{Time.now.strftime('%d %b %Y')}",
+      firebase_cli_token: ENV["FIREBASE_TOKEN"]
+    )
+  end
+
+end
