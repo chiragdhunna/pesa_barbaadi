@@ -29,15 +29,21 @@ android {
         create("release") {
             keyAlias = System.getenv("KEY_ALIAS")
             keyPassword = System.getenv("KEY_PASSWORD")
-            storeFile = System.getenv("STORE_FILE")?.let { file(it) } ?: file("release.keystore")
+            storeFile = System.getenv("STORE_FILE")?.let { file(it) } ?: (if (file("release.keystore").exists()) file("release.keystore") else null)
             storePassword = System.getenv("STORE_PASSWORD")
         }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
-            minifyEnabled = false
+            val releaseSigningConfig = signingConfigs.getByName("release")
+            signingConfig = if (releaseSigningConfig.storeFile != null) {
+                releaseSigningConfig
+            } else {
+                signingConfigs.getByName("debug")
+            }
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
