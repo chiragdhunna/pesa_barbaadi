@@ -1,17 +1,33 @@
-lane :distribute do
-  apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
-  build_number = ENV["BUILD_NUMBER"] || "1"
+default_platform(:android)
 
-  sh("flutter build apk --release", env: { "BUILD_NUMBER" => build_number })
+platform :android do
 
-  UI.message("APK exists? #{File.exist?(apk_path)} size=#{File.size(apk_path) rescue 'n/a'}")
+  desc "Run Flutter tests"
+  lane :test do
+    sh("flutter test")
+  end
 
-  firebase_app_distribution(
-    app: ENV["FIREBASE_APP_ID"],
-    apk_path: apk_path,
-    android_type: "APK",
-    groups: "pesa-barbaadi-testers",
-    release_notes: "Build ##{build_number} — #{Time.now.strftime('%d %b %Y')}",
-    firebase_cli_token: ENV["FIREBASE_TOKEN"]
-  )
+  desc "Build release APK"
+  lane :build do
+    sh("flutter build apk --release")
+  end
+
+  desc "Build and distribute to Firebase App Distribution"
+  lane :distribute do
+    apk_path = "../../build/app/outputs/flutter-apk/app-release.apk"
+    build_number = ENV["BUILD_NUMBER"] || "1"
+
+    sh("flutter build apk --release", env: { "BUILD_NUMBER" => build_number })
+
+    UI.message("APK exists? #{File.exist?(apk_path)} size=#{File.size(apk_path) rescue 'n/a'}")
+
+    firebase_app_distribution(
+      app: ENV["FIREBASE_APP_ID"],
+      apk_path: apk_path,
+      groups: "pesa-barbaadi-testers",
+      release_notes: "Build ##{build_number} — #{Time.now.strftime('%d %b %Y')}",
+      firebase_cli_token: ENV["FIREBASE_TOKEN"]
+    )
+  end
+
 end
