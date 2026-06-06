@@ -99,6 +99,13 @@ unlinked_spec.ds
 **/windows/flutter/generated_plugin_registrant.h
 **/windows/flutter/generated_plugins.cmake
 
+# Firebase & Secrets
+google-services.json
+**/android/app/google-services.json
+*.keystore
+*.jks
+.env
+
 # Linux
 **/linux/flutter/generated_plugin_registrant.cc
 **/linux/flutter/generated_plugin_registrant.h
