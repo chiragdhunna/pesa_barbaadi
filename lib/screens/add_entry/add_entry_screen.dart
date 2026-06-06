@@ -54,7 +54,9 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
       amount: double.parse(_amountController.text),
       date: _selectedDate,
       type: _selectedType,
-      note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
+      note: _noteController.text.trim().isEmpty
+          ? null
+          : _noteController.text.trim(),
       createdAt: DateTime.now(),
     );
 
@@ -89,10 +91,13 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
       ),
       body: tripAsync.when(
         data: (trip) {
-          if (trip == null) return const Center(child: Text('Trip not found'));
+          if (trip == null) {
+            return const Center(child: Text('Trip not found'));
+          }
 
           final myUid = user?.uid ?? '';
-          final friendUid = trip.members.keys.firstWhere((id) => id != myUid, orElse: () => '');
+          final friendUid = trip.members.keys
+              .firstWhere((id) => id != myUid, orElse: () => '');
           final friendName = trip.members[friendUid] ?? 'Friend';
 
           return SingleChildScrollView(
@@ -102,7 +107,8 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Who paid?', style: TextStyle(color: AppColors.textSecondary)),
+                  const Text('Who paid?',
+                      style: TextStyle(color: AppColors.textSecondary)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -112,7 +118,8 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                           isSelected: _selectedPayer == myUid,
                           onTap: () => setState(() => _selectedPayer = myUid),
                           selectedColor: AppColors.primary,
-                          selectedBgColor: const Color(0xFF1E2A55),
+                          selectedBgColor:
+                              AppColors.primary.withValues(alpha: 0.2),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -120,35 +127,49 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                         child: _PayerButton(
                           label: friendName,
                           isSelected: _selectedPayer == friendUid,
-                          onTap: () => setState(() => _selectedPayer = friendUid),
+                          onTap: () =>
+                              setState(() => _selectedPayer = friendUid),
                           selectedColor: AppColors.success,
-                          selectedBgColor: const Color(0xFF0E3A2E),
+                          selectedBgColor:
+                              AppColors.success.withValues(alpha: 0.2),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 32),
-                  const Text('Amount (₹)', style: TextStyle(color: AppColors.textSecondary)),
+                  const Text('Amount (₹)',
+                      style: TextStyle(color: AppColors.textSecondary)),
                   TextFormField(
                     controller: _amountController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                     decoration: const InputDecoration(
                       hintText: '0',
                       hintStyle: TextStyle(color: AppColors.textMuted),
-                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.textMuted)),
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.textMuted)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.primary)),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Enter amount';
+                      if (value == null || value.isEmpty) {
+                        return 'Enter amount';
+                      }
                       final amount = double.tryParse(value);
-                      if (amount == null || amount <= 0) return 'Invalid amount';
+                      if (amount == null || amount <= 0) {
+                        return 'Invalid amount';
+                      }
                       return null;
                     },
                   ),
                   const SizedBox(height: 32),
-                  const Text('Date', style: TextStyle(color: AppColors.textSecondary)),
+                  const Text('Date',
+                      style: TextStyle(color: AppColors.textSecondary)),
                   const SizedBox(height: 8),
                   InkWell(
                     onTap: () async {
@@ -163,46 +184,59 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: AppColors.textMuted)),
+                        border: Border(
+                            bottom: BorderSide(color: AppColors.textMuted)),
                       ),
                       child: Row(
                         children: [
                           Text(
                             AppFormatters.formatDate(_selectedDate),
-                            style: const TextStyle(color: Colors.white, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16),
                           ),
                           const Spacer(),
-                          const Icon(Icons.calendar_today, color: AppColors.primary, size: 20),
+                          const Icon(Icons.calendar_today,
+                              color: AppColors.primary, size: 20),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 32),
-                  const Text('Fill type', style: TextStyle(color: AppColors.textSecondary)),
+                  const Text('Fill type',
+                      style: TextStyle(color: AppColors.textSecondary)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       ChoiceChip(
                         label: const Text('Full tank'),
                         selected: _selectedType == AppStrings.typeFull,
-                        onSelected: (selected) => setState(() => _selectedType = AppStrings.typeFull),
+                        onSelected: (selected) =>
+                            setState(() => _selectedType = AppStrings.typeFull),
                         selectedColor: AppColors.primary,
-                        labelStyle: TextStyle(color: _selectedType == AppStrings.typeFull ? Colors.white : AppColors.textSecondary),
+                        labelStyle: TextStyle(
+                            color: _selectedType == AppStrings.typeFull
+                                ? Colors.white
+                                : AppColors.textSecondary),
                         backgroundColor: AppColors.surface,
                       ),
                       const SizedBox(width: 12),
                       ChoiceChip(
                         label: const Text('Partial'),
                         selected: _selectedType == AppStrings.typePartial,
-                        onSelected: (selected) => setState(() => _selectedType = AppStrings.typePartial),
+                        onSelected: (selected) => setState(
+                            () => _selectedType = AppStrings.typePartial),
                         selectedColor: AppColors.primary,
-                        labelStyle: TextStyle(color: _selectedType == AppStrings.typePartial ? Colors.white : AppColors.textSecondary),
+                        labelStyle: TextStyle(
+                            color: _selectedType == AppStrings.typePartial
+                                ? Colors.white
+                                : AppColors.textSecondary),
                         backgroundColor: AppColors.surface,
                       ),
                     ],
                   ),
                   const SizedBox(height: 32),
-                  const Text('Note (optional)', style: TextStyle(color: AppColors.textSecondary)),
+                  const Text('Note (optional)',
+                      style: TextStyle(color: AppColors.textSecondary)),
                   TextFormField(
                     controller: _noteController,
                     style: const TextStyle(color: Colors.white),
@@ -210,8 +244,10 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                     decoration: const InputDecoration(
                       hintText: 'e.g. highway trip',
                       hintStyle: TextStyle(color: AppColors.textMuted),
-                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.textMuted)),
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.textMuted)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.primary)),
                     ),
                   ),
                   const SizedBox(height: 48),
@@ -222,9 +258,12 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                       onPressed: _handleSave,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text('Save entry', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text('Save entry',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -232,8 +271,18 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+        error: (error, stack) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Text(
+              'Error: $error',
+              style: const TextStyle(color: AppColors.danger),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -261,7 +310,8 @@ class _PayerButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
         backgroundColor: isSelected ? selectedBgColor : Colors.transparent,
-        side: BorderSide(color: isSelected ? selectedColor : AppColors.textMuted),
+        side:
+            BorderSide(color: isSelected ? selectedColor : AppColors.textMuted),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Text(

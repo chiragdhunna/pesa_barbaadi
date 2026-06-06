@@ -19,7 +19,7 @@ class EntryListTile extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
     final isMe = user?.uid == entry.paidByUid;
     
-    final avatarBgColor = isMe ? const Color(0xFF1E2A55) : const Color(0xFF0E3A2E);
+    final avatarBgColor = isMe ? AppColors.primary.withValues(alpha: 0.2) : AppColors.success.withValues(alpha: 0.2);
     final avatarTextColor = isMe ? AppColors.primary : AppColors.success;
     final amountColor = isMe ? AppColors.success : AppColors.primary;
 

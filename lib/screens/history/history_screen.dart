@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pesa_barbaadi/models/fuel_entry.dart';
 import 'package:pesa_barbaadi/providers/auth_provider.dart';
@@ -31,6 +32,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         title: const Text('History'),
         backgroundColor: AppColors.surface,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.file_download_outlined),
+            onPressed: () => context.push('/export'),
+          ),
+        ],
       ),
       body: entriesAsync.when(
         data: (entries) {
@@ -237,8 +244,18 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             ],
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+        error: (error, stack) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Text(
+              'Error: $error',
+              style: const TextStyle(color: AppColors.danger),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -251,10 +268,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         backgroundColor: AppColors.surface,
         title: const Text('Delete Entry',
             style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
-          'Are you sure you want to delete this fuel entry?',
-          style: TextStyle(color: AppColors.textSecondary),
-        ),
+        content: const Text('Are you sure you want to delete this entry?',
+            style: TextStyle(color: AppColors.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

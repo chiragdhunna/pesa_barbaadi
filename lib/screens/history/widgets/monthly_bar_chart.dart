@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pesa_barbaadi/models/fuel_entry.dart';
 import 'package:pesa_barbaadi/utils/constants.dart';
+import 'package:pesa_barbaadi/utils/formatters.dart';
 
 class MonthlyBarChart extends StatelessWidget {
   final List<FuelEntry> entries;
@@ -68,7 +69,7 @@ class MonthlyBarChart extends StatelessWidget {
                   tooltipRoundedRadius: 8,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     return BarTooltipItem(
-                      '₹${rod.toY.toStringAsFixed(0)}',
+                      AppFormatters.formatCurrency(rod.toY),
                       const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -14,7 +14,8 @@ class ExportService {
   List<FuelEntry> _filterEntries(
       List<FuelEntry> entries, DateTimeRange? range) {
     if (range == null) return entries;
-    final start = DateTime(range.start.year, range.start.month, range.start.day);
+    final start =
+        DateTime(range.start.year, range.start.month, range.start.day);
     final end =
         DateTime(range.end.year, range.end.month, range.end.day, 23, 59, 59);
     return entries
@@ -107,9 +108,9 @@ class ExportService {
       final balance = youTotal - fairShare;
       sheet.getRangeByIndex(totalRow + 4, 1).setText('Balance:');
       sheet.getRangeByIndex(totalRow + 4, 3).setText(balance > 0
-          ? '$friendName owes you ₹${balance.abs().toStringAsFixed(2)}'
+          ? '$friendName owes you ${AppFormatters.formatCurrency(balance.abs())}'
           : balance < 0
-              ? 'You owe $friendName ₹${balance.abs().toStringAsFixed(2)}'
+              ? 'You owe $friendName ${AppFormatters.formatCurrency(balance.abs())}'
               : 'Settled');
 
       sheet.autoFitColumn(1);
@@ -185,19 +186,19 @@ class ExportService {
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text('Total Spent:'),
-                          pw.Text('₹${total.toStringAsFixed(2)}')
+                          pw.Text(AppFormatters.formatCurrency(total))
                         ]),
                     pw.Row(
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text('$myName Paid:'),
-                          pw.Text('₹${youTotal.toStringAsFixed(2)}')
+                          pw.Text(AppFormatters.formatCurrency(youTotal))
                         ]),
                     pw.Row(
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text('$friendName Paid:'),
-                          pw.Text('₹${friendTotal.toStringAsFixed(2)}')
+                          pw.Text(AppFormatters.formatCurrency(friendTotal))
                         ]),
                     pw.Divider(),
                     pw.Row(
@@ -208,9 +209,9 @@ class ExportService {
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                         pw.Text(
                             balance > 0
-                                ? '$friendName owes you ₹${balance.abs().toStringAsFixed(2)}'
+                                ? '$friendName owes you ${AppFormatters.formatCurrency(balance.abs())}'
                                 : balance < 0
-                                    ? 'You owe $friendName ₹${balance.abs().toStringAsFixed(2)}'
+                                    ? 'You owe $friendName ${AppFormatters.formatCurrency(balance.abs())}'
                                     : 'Settled',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
