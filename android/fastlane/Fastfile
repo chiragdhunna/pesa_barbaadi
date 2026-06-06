@@ -14,13 +14,18 @@ platform :android do
 
   desc "Build and distribute to Firebase App Distribution"
   lane :distribute do
+    apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
+
     sh("flutter build apk --release")
+
+    UI.message("APK exists? #{File.exist?(apk_path)} size=#{File.size(apk_path) rescue 'n/a'}")
 
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
-      apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
+      apk_path: apk_path,
+      android_type: "APK",
       groups: "pesa-barbaadi-testers",
-      release_notes: "Build #{ENV['BUILD_NUMBER'] || 'local'} — #{Time.now.strftime('%d %b %Y')}",
+      release_notes: "Build #{ENV['BUILD_NUMBER'] || 'local'} - #{Time.now.strftime('%d %b %Y')}",
       firebase_cli_token: ENV["FIREBASE_TOKEN"]
     )
   end
