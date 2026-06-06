@@ -33,13 +33,9 @@ jobs:
       - name: Set up Ruby for Fastlane
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: '3.3'
           bundler-cache: true
           working-directory: android
-
-      - name: Install Fastlane plugins
-        working-directory: android
-        run: bundle exec fastlane add_plugin firebase_app_distribution
 
       - name: Decode google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
